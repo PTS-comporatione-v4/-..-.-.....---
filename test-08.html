@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CICADA 6845 // test 08</title>
+<!--
+  CICADA 6845 — TEST 08 (FÁZA 2, variant A — finále fázy).
+  cesta A (pravá): Swiss-K DECODE "fgbrh twffo frppsuao aaglfe uiczwkkjvgurl." → "TICHO MEDZI SIGNALMI HOVORI NAJHLASNEJSIE." → najhlasnejsie; fragmenty 8.1–8.4.
+  cesta B (pasca): Swiss-K DECODE "jqams dwjyr bkqod, ewv oj rrjmcrssx." → "SLEPA CESTA KLAME, KYM JU NEPREJDES." → neprejdes; 2-znakový mini kúsok.
+  Nastavenia overené na cryptii.com 7.10.2026.
+  Odpoveď = POSLEDNÉ slovo dekódovaného textu.
+  CISLO_FAZY = 8.
+-->
+<style>
+  body { background:#0a0a0a; color:#c8c8c8; font-family:Georgia,serif;
+         max-width:640px; margin:8vh auto; padding:0 24px; line-height:1.7; }
+  h1 { color:#e8e8e8; font-size:1.4em; letter-spacing:3px; }
+  h2 { color:#e8e8e8; font-size:1.1em; letter-spacing:2px; margin-top:48px; }
+  .ak { color:#5a5a5a; font-size:.85em; letter-spacing:2px; }
+  .info { border:1px solid #2a2a2a; padding:20px 22px; margin:28px 0;
+          font-size:.95em; color:#b5b5b5; }
+  .hadanka { border-left:2px solid #333; padding-left:18px; margin:24px 0;
+             font-style:italic; }
+  .zadanie { font-style:normal; font-family:monospace; font-size:.95em;
+             letter-spacing:1px; color:#fff; word-break:break-all; }
+  .nastav { font-style:normal; font-family:monospace; font-size:.85em; color:#9ab;
+            display:block; margin-top:8px; line-height:1.9; }
+  input, button { background:#111; color:#e8e8e8; border:1px solid #444;
+                  padding:10px 14px; font-size:1em; font-family:inherit; }
+  input { width:220px; }
+  button { cursor:pointer; margin-left:8px; }
+  button:hover { border-color:#888; }
+  .vysledok { margin-top:20px; font-family:monospace; min-height:24px; }
+  .fragment { font-size:1.3em; letter-spacing:4px; color:#fff; }
+  .mini { font-size:1.6em; letter-spacing:6px; color:#a33; }
+  .chyba { color:#a33; }
+  .poznamka { margin-top:48px; font-size:.8em; color:#555; }
+  .cesta { border:1px solid #222; padding:20px; margin-top:24px; }
+</style>
+</head>
+<body>
+
+<p class="ak">CICADA 6845 // TEST 08</p>
+
+<div class="info" id="videoStart" style="border-color:#555;">
+  <b>Začiatok novej hádanky.</b><br>
+  <span id="videoLink"></span><br>
+  <span style="font-size:.85em; color:#777;">Pozeraj pozorne. Niečo tam je len na pár milisekúnd.</span>
+</div>
+
+<h1>Posledná šifra.</h1>
+
+<div class="hadanka" style="border:none; padding:0; margin:28px 0;">
+  Prešiel si morseovkou, Vigenèrom aj tromi Enigmami.<br>
+  Toto je posledný stroj. Za ním už len ticho —<br>
+  a ticho hovorí najhlasnejšie.
+</div>
+
+<div class="info">
+  Fáza 2 sa lúšti na <b>cryptii.com</b> → Enigma machine.<br>
+  Nastavenia (pre obe cesty rovnaké):
+  <span class="nastav">Model: Swiss-K<br>
+  Foreign chars: Include | DECODE</span><br>
+  Reflektor, rotory, pozície a krúžky v zadaní NIE SÚ.<br>
+  Nájdeš ich v kódových súboroch: <span class="nastav">reflektor.py, rotory.js, pozicie.cs, kruzky.rs</span><br><br>
+  Odpoveď je <b>POSLEDNÉ slovo</b> dekódovaného textu.<br>
+  Len jedna cesta je pravá.
+</div>
+
+<!-- ================= CESTA A (pravá) ================= -->
+<div class="cesta">
+<h2>CESTA A — prvý text</h2>
+<div class="hadanka">
+  <span class="zadanie">fgbrh twffo frppsuao aaglfe uiczwkkjvgurl.</span><br><br>
+  Zadaj posledné slovo:
+</div>
+<input id="odpA" type="text" autocomplete="off" spellcheck="false">
+<button onclick="over('A')">Odomknúť</button>
+<div class="vysledok" id="vyslA"></div>
+</div>
+
+<!-- ================= CESTA B (pasca) ================= -->
+<div class="cesta">
+<h2>CESTA B — druhý text</h2>
+<div class="hadanka">
+  <span class="zadanie">jqams dwjyr bkqod, ewv oj rrjmcrssx.</span><br><br>
+  Zadaj posledné slovo:
+</div>
+<input id="odpB" type="text" autocomplete="off" spellcheck="false">
+<button onclick="over('B')">Odomknúť</button>
+<div class="vysledok" id="vyslB"></div>
+</div>
+
+<p class="poznamka">
+  Zapíš si fragmenty aj s číslom testu. Bez všetkých fragmentov
+  sa na koniec nedostaneš. Ak finálna adresa nefunguje, niektorý
+  fragment máš zle — vráť sa a lúšti znova.
+</p>
+
+<script>
+// SCHVÁLENÉ 7.10.2026 — A: "najhlasnejsie"; B: "neprejdes".
+// CISLO_FAZY = 8 sa NESMIE meniť (je súčasťou hashov).
+const CISLO_FAZY = 8;
+const REALNA = "A";
+const KONTROLA_A = "5e4db619667d4368c954b45c1824857f08134921ec2c4ff9be4ff307414dedf2";
+const KONTROLA_B = "0ce6cecef765e29efc1e21191f0378247f6e8d91f0f3c6818b693419d55f025d";
+const NEXT_URL = "";  // Fáza 2 tu končí. Čo bude ďalej, sa ešte len navrhne.
+const VIDEO_URL = "";  // unlisted video so začiatkom novej hádanky — doplniť, až bude nahraté.
+
+if(!VIDEO_URL){
+  document.getElementById("videoLink").innerHTML = '<span style="color:#777;">Video sa pripravuje…</span>';
+} else {
+  document.getElementById("videoLink").innerHTML = 'Nezaradené video: <a style="color:#9ab" href="' + VIDEO_URL + '">pozrieť →</a>';
+}
+
+function norm(s){
+  return s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+async function sha256hex(s){
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+function kopiruj(t){
+  navigator.clipboard.writeText(t);
+}
+
+async function over(cesta){
+  const vstup = document.getElementById("odp"+cesta).value;
+  const vystup = document.getElementById("vysl"+cesta);
+  const n = norm(vstup);
+  if(n === "cicada6845"){
+    vystup.innerHTML = '<span style="color:#e8e8e8">Poznáš meno. Ale meno nie je odpoveď.<br>Lúšti ďalej.</span>';
+    return;
+  }
+  if(!n){ vystup.innerHTML = '<span class="chyba">Zadaj odpoveď.</span>'; return; }
+  const k = await sha256hex("c6845|" + CISLO_FAZY + "|" + cesta + "|" + n);
+  const ok = (cesta === "A") ? KONTROLA_A : KONTROLA_B;
+  if(k !== ok){
+    vystup.innerHTML = '<span class="chyba">Nesprávne. Skontroluj nastavenia stroja a skús znova.</span>';
+    return;
+  }
+  if(cesta === REALNA){
+    const frags = [];
+    for(let j=1;j<=4;j++) frags.push((await sha256hex(n + "|" + j)).slice(0,8));
+    let html = "Fragmenty testu 08:<br>";
+    frags.forEach((f,j)=>{
+      html += '<span class="fragment">8.' + (j+1) + ": " + f + "</span><br>";
+    });
+    html += '<br><button onclick="kopiruj(\'' + frags.join(" ") + '\')">Kopírovať všetky</button>';
+    html += '<br><br><span style="color:#e8e8e8">Fáza 2 je za tebou.<br>Ticho hovorilo najhlasnejšie.</span>';
+    if(NEXT_URL) html += '<br><br>Ďalší test: <a style="color:#9ab" href="' + NEXT_URL + '">pokračovať →</a>';
+    vystup.innerHTML = html;
+  } else {
+    const mini = (await sha256hex("c6845|" + CISLO_FAZY + "|mini|" + n)).slice(0,2);
+    vystup.innerHTML = 'Mini kúsok: <span class="mini">' + mini + "</span><br>" +
+      '<span class="chyba">Toto nie je tá pravá cesta. Slepá cesta klame.</span>';
+  }
+}
+
+["odpA","odpB"].forEach(id=>{
+  document.getElementById(id).addEventListener("keydown", e=>{
+    if(e.key === "Enter") over(id === "odpA" ? "A" : "B");
+  });
+});
+</script>
+</body>
+</html>
