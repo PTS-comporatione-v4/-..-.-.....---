@@ -4,14 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CICADA 6845 // test 08</title>
-<!--
-  CICADA 6845 — TEST 08 (FÁZA 2, variant A — finále fázy).
-  cesta A (pravá): Swiss-K DECODE "fgbrh twffo frppsuao aaglfe uiczwkkjvgurl." → "TICHO MEDZI SIGNALMI HOVORI NAJHLASNEJSIE." → najhlasnejsie; fragmenty 8.1–8.4.
-  cesta B (pasca): Swiss-K DECODE "jqams dwjyr bkqod, ewv oj rrjmcrssx." → "SLEPA CESTA KLAME, KYM JU NEPREJDES." → neprejdes; 2-znakový mini kúsok.
-  Nastavenia overené na cryptii.com 7.10.2026.
-  Odpoveď = POSLEDNÉ slovo dekódovaného textu.
-  CISLO_FAZY = 8.
--->
+<!-- CICADA 6845 — TEST 08. -->
 <style>
   body { background:#0a0a0a; color:#c8c8c8; font-family:Georgia,serif;
          max-width:640px; margin:8vh auto; padding:0 24px; line-height:1.7; }
@@ -68,7 +61,7 @@
   Len jedna cesta je pravá.
 </div>
 
-<!-- ================= CESTA A (pravá) ================= -->
+<!-- ================= CESTA A ================= -->
 <div class="cesta">
 <h2>CESTA A — prvý text</h2>
 <div class="hadanka">
@@ -80,7 +73,7 @@
 <div class="vysledok" id="vyslA"></div>
 </div>
 
-<!-- ================= CESTA B (pasca) ================= -->
+<!-- ================= CESTA B ================= -->
 <div class="cesta">
 <h2>CESTA B — druhý text</h2>
 <div class="hadanka">
@@ -99,7 +92,7 @@
 </p>
 
 <script>
-// SCHVÁLENÉ 7.10.2026 — A: "najhlasnejsie"; B: "neprejdes".
+// SCHVÁLENÉ 7.10.2026 — variant A.
 // CISLO_FAZY = 8 sa NESMIE meniť (je súčasťou hashov).
 const CISLO_FAZY = 8;
 const REALNA = "A";
